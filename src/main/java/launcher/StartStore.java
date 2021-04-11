@@ -60,36 +60,49 @@ public class StartStore {
 
 			System.out.println("please Provide KAFKA topic");
 			topic = scanner.next();
+			
+			/*Creation Spark Session*/
 			SparkSession sparkSession = SparkSession.builder().appName("TradeStore").master("local").getOrCreate();
 
+			/*Fetching Data from KAFKA*/
 			Dataset<Row> rawData = sparkSession.readStream().format("kafka").option("kafka.bootstrap.servers", brokers)
 					.option("subscribe", topic).load().selectExpr("cast(value as string) as value");
 
+			/*Map : Transforming the data from JSON String to Model Class */
 			Dataset<StoreData> mapData = rawData
 					.map((org.apache.spark.api.java.function.MapFunction<Row, StoreData>) x -> {
 						StoreData storeData = new Gson().fromJson(x.getString(0), StoreData.class);
 						return storeData;
 					}, Encoders.bean(StoreData.class));
-
+			
+			/*Streaming Write Operations for persisting Stream type Data into memory*/
 			StreamingQuery start = mapData.writeStream().foreachBatch((partData, id) -> {
 
+				/*Fetch Data from MYSQL Table*/
 				Dataset<Row> jdbcData = getJDBCData(sparkSession).persist();
 
+				/*Data persisted into the memory*/
 				Dataset<StoreData> persistData = partData.persist();
 
+				/*Joining the raw Data with MYSQL DATA*/
 				Dataset<Row> allData = persistData.join(jdbcData, col("tradeId").equalTo(col("trade_Id")), "left");
+				
+				/*form filter condition on the basis of given conditions*/
 				Dataset<Row> sqlData = allData
 						.selectExpr("*",
 								"(case when version<trade_version then true when date_format(maturity_date,'dd/MM/yyyy')<=date(now()) then true else false end) as filtercon")
 						.where("filtercon=false");
 
+				/*updated the Filter Data that joins with DB Table*/
 				updateJDBCData(sqlData.selectExpr("tradeId as trade_id", "version as trade_version",
 						"counterPartyId as counter_party_id", "bookId as  book_id", "maturityDate as maturity_date",
 						"'N' as Expired"));
 
+				/*Inserted the filtered data that does not exist into the DB*/
 				putJDBCData(persistData.join(jdbcData, col("tradeId").equalTo(col("trade_Id")), "left")
 						.where("tradestore_id is null").dropDuplicates(), SaveMode.Append);
 
+				/*For Every Batch check the records are Expired or not if Expired than marked as Expired*/
 				updateJDBCData(jdbcData.filter("date_format(maturity_date,'dd/MM/yyyy')<=date(now())")
 						.selectExpr("*", "'Y' as ExpiredUpdate").drop("Expired")
 						.withColumnRenamed("ExpiredUpdate", "Expired"));
