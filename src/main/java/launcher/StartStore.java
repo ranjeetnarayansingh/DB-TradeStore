@@ -61,7 +61,7 @@ public class StartStore {
 			System.out.println("please Provide KAFKA topic");
 			topic = scanner.next();
 			
-			/*Creation Spark Session*/
+			/*Initilize Spark Session*/
 			SparkSession sparkSession = SparkSession.builder().appName("TradeStore").master("local").getOrCreate();
 
 			/*Fetching Data from KAFKA*/
