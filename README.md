@@ -1,12 +1,20 @@
 # DB-TradeStore
 
-System Requirment : 
+System Requirment :
+
 KAFKA > 0.10
+
 MYSQL >5.7.33
 
+Main Class : 
+StartStore
+
 Start Kafka Zookeeper --  bin/zookeeper-server-start.sh config/zookeeper.properties
+
 Start Kafka Server -- bin/kafka-server-start.sh config/server.properties
+
 create Topic -- bin/kafka-topics.sh --create --topic testone --bootstrap-server localhost:9092
+
 
 Note: topic name should be the same provided in to code
 
