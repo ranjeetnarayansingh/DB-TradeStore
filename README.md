@@ -1,6 +1,13 @@
 # DB-TradeStore
+There are thousands of flowing into one store. In this solution i used kafka as source.
+the data will fetch from the kafka server and after the transforming of data on the basis on provide conditions
+The Transformation operations are done in Spark.
+the transformed data will persisted into the MySQL DB.
+
 
 System Requirment :
+
+JAVA : 1.8
 
 KAFKA > 0.10
 
@@ -15,6 +22,7 @@ Start Kafka Server -- bin/kafka-server-start.sh config/server.properties
 
 create Topic -- bin/kafka-topics.sh --create --topic testone --bootstrap-server localhost:9092
 
+Test Producer : bin/kafka-console-producer.sh --topic testone --bootstrap-server localhost:9092
 
 Note: topic name should be the same provided in to code
 
