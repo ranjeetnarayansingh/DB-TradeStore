@@ -1,7 +1,8 @@
 # DB-TradeStore
-There are thousands of flowing into one store. In this solution i used kafka as source.
+There are thousands of trades flowing into one store. In this solution i used kafka as source.
 the data will fetch from the kafka server and after the transforming of data on the basis on provide conditions
 The Transformation operations are done in Spark.
+To make the data processing near real time i used Spark Streaming.
 the transformed data will persisted into the MySQL DB.
 
 
