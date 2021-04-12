@@ -14,6 +14,8 @@ KAFKA > 0.10
 
 MYSQL >5.7.33
 
+Spark : 3.0.1
+
 Main Class : 
 StartStore
 
