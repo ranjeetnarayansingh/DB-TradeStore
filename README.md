@@ -16,6 +16,8 @@ MYSQL >5.7.33
 
 Spark : 3.0.1
 
+Scala : 2.12
+
 Main Class : 
 StartStore
 
