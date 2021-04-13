@@ -33,8 +33,13 @@ Note: topic name should be the same provided in to code
 
 Producer Record Sample -- 
 {"tradeId":"T1","version":"1","counterPartyId":"CP-1","bookId":"B1","maturityDate":"13/04/2021"}
+
 {"tradeId":"T2","version":"1","counterPartyId":"CP-2","bookId":"B1","maturityDate":"12/04/2021"}
+
 {"tradeId":"T3","version":"1","counterPartyId":"CP-3","bookId":"B1","maturityDate":"12/04/2021"}
+
 {"tradeId":"T4","version":"1","counterPartyId":"CP-4","bookId":"B1","maturityDate":"12/04/2021"}
+
 {"tradeId":"T3","version":"2","counterPartyId":"CP-3","bookId":"B1","maturityDate":"12/04/2021"}
+
 {"tradeId":"T3","version":"1","counterPartyId":"CP-4","bookId":"B1","maturityDate":"12/04/2021"}
